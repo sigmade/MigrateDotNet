@@ -1,9 +1,9 @@
 ﻿using Domain;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using MigrateDotNet.Hubs;
 
@@ -20,14 +20,15 @@ namespace MigrateDotNet
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc();
+            services.AddControllers();
             services.AddSignalR();
             services.AddDbContext<MigrateDBContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("MSSQLConnection")));
         }
 
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -39,11 +40,10 @@ namespace MigrateDotNet
             }
 
             app.UseHttpsRedirection();
-            app.UseSignalR(routes =>
-            {
-                routes.MapHub<ChatHub>("/chathub");
+            app.UseRouting();
+            app.UseEndpoints(endpoints => {
+                endpoints.MapControllers();
             });
-            app.UseMvc();
         }
     }
 }

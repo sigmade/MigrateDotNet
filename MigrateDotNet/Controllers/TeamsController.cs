@@ -24,6 +24,7 @@ namespace MigrateDotNet.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Team>>> GetTeams()
         {
+            
             return await _context.Teams.ToListAsync();
         }
 

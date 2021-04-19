@@ -24,7 +24,8 @@ namespace MigrateDotNet.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Player>>> GetPlayers()
         {
-            return await _context.Players.ToListAsync();
+            var players = _context.Players.Include(u => u.Team);
+            return await players.ToListAsync();
         }
 
         // GET: api/Players/5
