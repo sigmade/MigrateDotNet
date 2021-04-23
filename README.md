@@ -4,3 +4,4 @@
 4. Добавить  <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.0" />
 5. Подключить Microsoft.AspNetCore.Authentication.JwtBearer.
 6. Исправить на IHostBuilder в Program
+7. app.UseAuthorization();
