@@ -19,3 +19,27 @@ Aafter
   --or--
   .Where(x => x.BirthDate != null && x.BirthDate.Value.Month == DateTime.Now.Month)
     
+
+* .DefaultIfEmpty() don't work
+ -- after --
+var individualUser = from user in usersQuery
+                                     from combineDetail in combineDetails
+                                                      .Where(combine => combine.UserId == user.Id)
+                                                      .DefaultIfEmpty(defaultDetail)
+                                     select new ViewModel
+                                     {
+                                         UserId = user.Id,
+                                         CombineAmountSum = combineDetail.Amount,
+                                         CombineBettingCount = combineDetail.Count,
+                                         CombineHit = combineDetail.Hit,
+                                     };
+ -- befaore --                                    
+var individualUser = from user in usersQuery
+                                     let combineDetail = combineDetails.Where(combine => combine.UserId == user.Id).FirstOrDefault()
+                                     select new ViewModel
+                                     {
+                                         UserId = user.Id,
+                                         CombineAmountSum = combineDetail == null ? default : combineDetail.Amount,
+                                         CombineBettingCount = combineDetail == null ? default : combineDetail.Count,
+                                         CombineHit = combineDetail == null ? default : combineDetail.Hit,
+                                     };                                     
